@@ -1,0 +1,52 @@
+{
+    "name": "hen8y/laravel-vpay", 
+    "description": "laravel 6, 7, 8, 9, 10 package for Vpay",
+    "keywords": 
+    [
+        "vpay",
+        "payment",
+        "gateway",
+        "php",
+        "github",
+        "laravel",
+        "Open Source",
+        "payments",
+        "subscription",
+        "laravel 6",
+        "laravel 7",
+        "laravel 8"
+    ],
+    "type": "library",
+    "require": {
+        "php": "^7.2|^8.0|^8.1",
+        "laravel/framework": "^5.5|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "adhocore/jwt": "1.*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hen8y\\Vpay\\": "src/",
+            "Hen8y\\Vpay\\App\\": "src/app"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ogbonna Henry",
+            "email": "hen8y@outlook.com",
+            "homepage": "https://hen8y.dev",
+            "role": "developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "laravel":{
+            "providers":[
+                "Hen8y\\Vpay\\VpayServiceProvider"
+            ],
+            "aliases":{
+                "Vpay":"Hen8y\\Vpay"
+            }
+        }
+    }
+}
