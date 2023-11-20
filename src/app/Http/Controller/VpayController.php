@@ -2,7 +2,7 @@
 
 namespace Hen8y\Vpay\App\Http\Controller;
 
-use Hen8y\Vpay\App\Jobs\VpayJob;
+use App\Jobs\VpayJob;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 

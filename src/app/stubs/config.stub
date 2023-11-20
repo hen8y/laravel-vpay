@@ -11,6 +11,7 @@ return [
     |
     | Here you may specify what is the status pf your app
     | Options("live", "sandbox")
+    | By leaving this empty field empty would by default use sandbox
     |
     */
     "status"=> "",

@@ -21,7 +21,7 @@ You'll then need to run `composer install` or `composer update` to download it a
 
 
 
-Once Laravel Vpay is installed, you need to register the Facade like so:
+Once Laravel Vpay is installed, you need to register the service provider. Open up config/app.php and add the following to the providers key.
 
 ```php
 'providers' => [
@@ -73,6 +73,7 @@ return [
     |
     | Here you may specify what is the status pf your app
     | Options("live", "sandbox")
+    | By leaving this empty field empty would by default use sandbox
     |
     */
     "status"=> env("VPAY_STATUS","sandbox"),
@@ -213,14 +214,16 @@ class PaymentController extends Controller
 
     /**
      * Redirect the User to Vpay Checkout Page
-     */
+    */
     public function redirectToGateway()
     {
 
-        // Create a trasaction 
+        /**
+         * Create a trasaction
+        */
 
         // \App\Models\Transaction::create([
-        //     'user_id'=>auth()->user()->id,
+        //     'user_id'=>1,
         //     'amount'=>request("amount"),
         //     'type' =>'Deposit',
         //     'transactionref'=> request("transactionref"),
@@ -244,18 +247,24 @@ class PaymentController extends Controller
 
     public function success($transactionref)
     {
-        // Now you can send a notification of success to user
+        /**
+         * 
+         Now you can send a notification of success to user
+        */
+
+        // session()->flash("message", "success");
     }
 
 
     public function failure($transactionref)
     {
         /**
+         * 
          * Since Vpay doesn't send any webhook data when transfer fails, if you created a pending transaction when 
          * redirecting to the gateway in the redirectToGateway(), make sure to cancel the transaction
-         * 
-         * Transaction::where("transactionref",$transactionref)->delete();
         */
+
+        //Transaction::where("transactionref",$transactionref)->delete();
     }
 
 
@@ -281,6 +290,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class VpayJob implements ShouldQueue
 {
@@ -307,9 +317,11 @@ class VpayJob implements ShouldQueue
 
             $transactionref = $this->payload['transactionref'];
             $amount = $this->payload['amount'];
-            // get the transaction with same transactionref and update status to be successfull
-
-            // Increment the user balance by the amount
+            /**
+             * 
+             * Get the transaction with same transactionref and update status to be successfull
+             * Increment the user balance by the amount
+            */
         }
     }
 }
@@ -353,8 +365,6 @@ The webhook url `payment/webhook/vpay` is secured using a middleware which decod
 
 Please feel free to fork this package and contribute by submitting a pull request to enhance the functionalities.
 
-
-Why not star the github repo? I'd love the attention! Why not share the link for this repository on Twitter? Spread the word!
 
 Don't forget to [follow me on twitter](https://twitter.com/hen8y)!
 
