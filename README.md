@@ -14,7 +14,7 @@ composer require hen8y/laravel-vpay
 Or add the following line to the require block of your `composer.json` file.
 
 ```
-"hen8y/laravel-vpay": "1.0.*"
+"hen8y/laravel-vpay": "1.*"
 ```
 
 You'll then need to run `composer install` or `composer update` to download it and have the autoloader updated.
@@ -39,11 +39,11 @@ Once Laravel Vpay is installed, you need to register the Facade like so:
     /payment/webhook/vpay
  ```
 
-Visit Vpay dashboard and `https://yoursite.com/payment/webhook/pay` as your webhook url
+Visit Vpay dashboard and add `https://yoursite.com/payment/webhook/pay` as your webhook url in the settings
 
 ## Configuration
 
-You can publish the configuration file using this command:
+You can publish the files needed using this command:
 
 ```bash
 php artisan make:vpay
@@ -56,7 +56,7 @@ php artisan make:vpay
 
 #### Details of the Config file
 
-The configuration-file named `vpay.php` with some sensible defaults that was placed in your `config` directory:
+The configuration-file named `vpay.php` with some defaults that was placed in your `config` directory:
 
 ```php
 <?php
@@ -167,7 +167,7 @@ MERCHANT_EMAIL=hen8y@gmail.com
 ```
 
 
-Set up your success & failure callack routes :
+Set up your success & failure callback routes :
 
 - Redirect to the checkout
 
