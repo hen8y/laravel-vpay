@@ -4,7 +4,7 @@
 
 ## Installation
 
-[PHP](https://php.net) 5.5, [LARAVEL] (https://laravel.com), and [Composer](https://getcomposer.org) are required.
+[PHP](https://php.net) 5.5, [LARAVEL](https://laravel.com), and [Composer](https://getcomposer.org) are required.
 
 To get the latest version of Laravel Vpay, simply require it
 
