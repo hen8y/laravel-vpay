@@ -1,6 +1,5 @@
 # laravel-vpay
 
-> A Laravel Package for working with Paystack seamlessly
 
 ## Installation
 
