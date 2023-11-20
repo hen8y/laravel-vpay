@@ -37,16 +37,11 @@
             "role": "developer"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "extra": {
         "laravel":{
             "providers":[
                 "Hen8y\\Vpay\\VpayServiceProvider"
-            ],
-            "aliases":{
-                "Vpay":"Hen8y\\Vpay"
-            }
+            ]
         }
     }
 }

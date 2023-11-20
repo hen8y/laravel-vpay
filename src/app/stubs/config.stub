@@ -23,7 +23,7 @@ return [
     | Enter the public key gotten from vpay website 
     |
     */
-    "public_id"=> env("VPAY_PUBLICID",""),
+    "public_id"=> env("VPAY_PUBLICID"),
 
     /*
     |--------------------------------------------------------------------------
@@ -33,7 +33,7 @@ return [
     | Enter the secret key gotten from vpay website
     |
     */
-    "secret_key"=> env("VPAY_SECRET",""),
+    "secret_key"=> env("VPAY_SECRET"),
 
 
     /*

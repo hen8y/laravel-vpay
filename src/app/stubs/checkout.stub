@@ -23,10 +23,10 @@
                     txn_charge_type: "{{ config('vpay.txn_charge_type') }}",
 
                     onSuccess: function(response) {
-                        window.location.href = "{{ route('vpay.payment.success') }}"
+                        window.location.href = "{{ route('vpay.payment.success',$data['transactionref']) }}"
                     },
                     onExit: function(response) {
-                        window.location.href = "{{ route('vpay.payment.fail') }}"
+                        window.location.href = "{{ route('vpay.payment.fail',$data['transactionref']) }}"
                     }
                 }
                 if(window.VPayDropin){
