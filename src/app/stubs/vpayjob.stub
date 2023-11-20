@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class VpayJob implements ShouldQueue
 {
@@ -25,13 +26,16 @@ class VpayJob implements ShouldQueue
      */
     public function handle()
     {
-        
+        if($this->payload["originator_account_name"] != "Failed Card Transaction" ){
 
-       \App\Models\User::create([
-            'name' => $this->payload["amount"],
-            'username'=> $this->payload["transactionref"],
-            'email' => 'henry@gmail.com',
-            "password"=>"emenike134"
-    ]);
+            Log::info($this->payload);
+
+
+            $transactionref = $this->payload['transactionref'];
+            $amount = $this->payload['amount'];
+            // get the transaction with same transactionref and update status to be successfull
+
+            // Increment the user balance by the amount
+        }
     }
 }

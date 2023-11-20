@@ -35,6 +35,17 @@ return [
     */
     "secret_key"=> env("VPAY_SECRET"),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Customer Care Email Address 
+    |--------------------------------------------------------------------------
+    |
+    | Here specify the customer service & support channels of your business 
+    | e.g. Tel: +2348030070000, Email: support@yourorg.com
+    |
+    */
+    "customer_service_channel"=> env("MERCHANT_EMAIL"),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -46,16 +57,6 @@ return [
     */
     "customer_logo"=>"",
 
-    /*
-    |--------------------------------------------------------------------------
-    | Customer Care Email Address 
-    |--------------------------------------------------------------------------
-    |
-    | Here specify the customer service & support channels of your business 
-    | e.g. Tel: +2348030070000, Email: support@yourorg.com
-    |
-    */
-    "customer_service_channel"=> "email@yourapp.com",
 
     /*
     |--------------------------------------------------------------------------

@@ -24,11 +24,12 @@ You'll then need to run `composer install` or `composer update` to download it a
 Once Laravel Vpay is installed, you need to register the Facade like so:
 
 ```php
-'aliases' => [
+'providers' => [
     ...
-    'Vpay' => hen8y\Vpay\Facades\Vpay::class,
+    Hen8y\Vpay\VpayServiceProvider::class,
     ...
 ]
+
 ```
 
 ## Important
@@ -163,7 +164,7 @@ Open your .env file and add your public key, secret key, merchant email and paym
 VPAY_PUBLICID=xxxxxxxx
 VPAY_SECRET=xxxxxxxx
 VPAY_STATUS=sandbox
-MERCHANT_EMAIL=hen8y@gmail.com
+MERCHANT_EMAIL=hen8y@outlook.com
 ```
 
 
@@ -180,13 +181,13 @@ Route::post('/payment/redirect', 'PaymentController@redirectToGateway')->name('v
 - The deposit success
 
 ```php
-Route::post('/payment/success/{transactionref}', 'PaymentController@success')->name('vpay.payment.success');
+Route::get('/payment/success/{transactionref}', 'PaymentController@success')->name('vpay.payment.success');
 ```
 
 - The deposit failure
 
 ```php
-Route::post('/payment/failure/{transactionref}', 'PaymentController@failure')->name('vpay.payment.fail');
+Route::get('/payment/failure/{transactionref}', 'PaymentController@failure')->name('vpay.payment.fail');
 ```
 
 
@@ -203,7 +204,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Hen8y\Vpay\Vpay;
-use Str;
 
 
 
@@ -299,15 +299,18 @@ class VpayJob implements ShouldQueue
      */
     public function handle()
     {
+        if($this->payload["originator_account_name"] != "Failed Card Transaction" ){
 
-        Log::info($this->payload)
+
+            Log::info($this->payload);
 
 
-        $transactionref = $this->payload['transactionref'];
-        $amount = $this->payload['amount'];
-        // get the transaction with same transactionref and update status to be successfull
+            $transactionref = $this->payload['transactionref'];
+            $amount = $this->payload['amount'];
+            // get the transaction with same transactionref and update status to be successfull
 
-        // Increment the user balance by the amount
+            // Increment the user balance by the amount
+        }
     }
 }
 
@@ -315,21 +318,21 @@ class VpayJob implements ShouldQueue
 ```
 
 
+Sample Html/Bootstrap Form
+
+
 ```html
-<form method="POST" action="{{ route('vpay.redirect') }}" role="form">
-    <div class="row" style="margin-bottom:40px;">
-        <div class="col-md-8 col-md-offset-2">
-            <input type="hidden" name="email" value="hen8y@outlook.com"> {{-- required --}}
-            <input type="hidden" name="amount" value="800"> {{-- required --}}
+<form method="POST" action="{{ route('vpay.redirect') }}" role="form" class="mt-5 col-md-8 mx-auto">
+    <h3>Payment Form</h3>
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <input type="email" class="form-control mt-3" name="email" placeholder="Email Address"> {{-- required --}}
+            <input type="text" class="form-control mt-3" name="amount" placeholder="Amount"> {{-- required --}}
             <input type="hidden" name="currency" value="NGN">
-            
+            <input type="hidden" name="transactionref" value="{{ Str::random(25) }}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}"> {{-- employ this in place of csrf_field only in laravel 5.0 --}}
 
-            <p>
-                <button class="btn btn-success btn-lg btn-block" type="submit" value="Pay Now!">
-                    <i class="fa fa-plus-circle fa-lg"></i> Pay Now!
-                </button>
-            </p>
+            <button class="btn btn-primary mt-3">Submit</button>
         </div>
     </div>
 </form>
