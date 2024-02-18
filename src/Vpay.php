@@ -1,7 +1,7 @@
 <?php
 namespace Hen8y\Vpay;
 
-use Illuminate\Support\Facades\Config;
+
 
 
 class Vpay
@@ -20,27 +20,17 @@ class Vpay
     protected $customer_service_channel;
 
     protected $txn_charge_type;
-
+    
     protected $txn_charge;
 
 
-    public function __construct(){
-        $this->getPublicId();
-        $this->getSecret();
-        $this->appStatus();
-        $this->customerLogo();
-        $this->customerChannel();
-        $this->transactionType();
-        $this->transactionCharge();
-    }
-
-
+    
     /**
      * Get Public Id from Vpay Config File
      */
     public function getPublicId(){
 
-        $this->public_id = Config::get("vpay.public_id");
+        return $this->public_id = config("vpay.public_id");
     }
 
 
@@ -50,7 +40,7 @@ class Vpay
      */
     public function getSecret(){
 
-        $this->secret_key = Config::get("vpay.secret_key");
+        return $this->secret_key = config("vpay.secret_key");
     }
 
     /**
@@ -58,7 +48,7 @@ class Vpay
      */
     public function appStatus(){
 
-        $this->status = Config::get("vpay.status");
+        return $this->status = config("vpay.status");
     }
 
     /**
@@ -66,7 +56,7 @@ class Vpay
      */
     public function customerLogo(){
 
-        $this->customer_logo = Config::get("vpay.customer_logo");
+        return $this->customer_logo = config("vpay.customer_logo");
     }
 
 
@@ -75,7 +65,7 @@ class Vpay
      */
     public function customerChannel(){
         
-        $this->customer_service_channel = Config::get("vpay.customer_service_channel");
+        $this->customer_service_channel = config("vpay.customer_service_channel");
     }
 
     /**
@@ -83,7 +73,7 @@ class Vpay
      */
     public function transactionType(){
 
-        $this->txn_charge_type = Config::get("vpay.txn_charge_type");
+        return $this->txn_charge_type = config("vpay.txn_charge_type");
     }
 
     /**
@@ -91,22 +81,31 @@ class Vpay
      */
     public function transactionCharge(){
 
-        $this->txn_charge = Config::get("vpay.txn_charge");
+        return $this->txn_charge = config("vpay.txn_charge");
     }
 
-    public function redirectNow()
-    {
-        return redirect($this->url);
-    }
 
-     /**
-     * Redirects to the checkout page with details
+    /**
+     * Displays the checkout page
+     *
+     * @param  array $data
      */
-
-    public static function handleCheckout($data)
+    public function handleCheckout($data)
     {
+       if($data){
+            ob_start();
         
-        return view("vpay.checkout",["data"=>$data]);
+            include(__DIR__ . '/main/checkout.php');
+        
+            $html = ob_get_clean(); 
+        
+            return $html;
+       }else{
+            http_response_code(419);
+       }
     }
+    
+
+
 
 }

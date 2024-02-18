@@ -3,7 +3,7 @@
 
 ## Installation
 
-[PHP](https://php.net) 5.5, [LARAVEL](https://laravel.com), and [Composer](https://getcomposer.org) are required.
+[PHP](https://php.net) 7.2, [LARAVEL](https://laravel.com), and [Composer](https://getcomposer.org) are required.
 
 To get the latest version of Laravel Vpay, simply require it
 
@@ -44,16 +44,14 @@ Visit Vpay dashboard and add `https://yoursite.com/payment/webhook/pay` as your 
 
 ## Configuration
 
-You can publish the files needed using this command:
+If you want to use the webhook make sure to publish the job file:
 
 ```bash
-php artisan make:vpay
+php artisan vpay:publish
 ```
 
-#### 3 Files would be created
-- Configuration-file named `vpay.php` in the `config` directory
+#### A file would be created
 - Job-file named `VpayJob.php` in the `Jobs` directory
-- Blade-file named `checkout.php` in the `views/vpay` directory
 
 #### Details of the Config file
 
@@ -169,29 +167,21 @@ MERCHANT_EMAIL=hen8y@outlook.com
 ```
 
 
-Set up your success & failure callback routes :
+Set up your redirect & callback route :
 
 - Redirect to the checkout
 
 
 ```php
-Route::post('/payment/redirect', 'PaymentController@redirectToGateway')->name('vpay.redirect');
+Route::post('/payment/redirect', '\App\Http\Controllers\PaymentController@redirectToGateway');
 ```
 
 
-- The deposit success
+- Callback
 
 ```php
-Route::get('/payment/success/{transactionref}', 'PaymentController@success')->name('vpay.payment.success');
+Route::post('/payment/callback/', '\App\Http\Controllers\PaymentController@callback');
 ```
-
-- The deposit failure
-
-```php
-Route::get('/payment/failure/{transactionref}', 'PaymentController@failure')->name('vpay.payment.fail');
-```
-
-
 
 
 
@@ -213,58 +203,43 @@ class PaymentController extends Controller
 {
 
     /**
-     * Redirect the User to Vpay Checkout Page
-    */
+     * Redirect the User to Checkout Page
+     * @return void
+     */
     public function redirectToGateway()
     {
 
-        /**
-         * Create a trasaction
-        */
-
-        // \App\Models\Transaction::create([
-        //     'user_id'=>1,
-        //     'amount'=>request("amount"),
-        //     'type' =>'Deposit',
-        //     'transactionref'=> request("transactionref"),
-        //     'status'=>'Pending',
-        // ]);
-
-
-        /**
-         * Sends the transaction data to the checkout handler
-         * 
-        */
+        // Sends the transaction data to the checkout handler
+        
         $data = array(
         'amount'=> request("amount"),
         "email"=>request("email"),
         "currency"=>"NGN",
         "transactionref"=> request("transactionref"),
         );
-        return Vpay::handleCheckout($data);  
+        return (new Vpay)->handleCheckout($data);
     }
 
 
-    public function success($transactionref)
-    {
-        /**
-         * 
-         Now you can send a notification of success to user
-        */
+    /**
+     * Callback
+     *
+     * @param Request $request
+     */
+     public function callback(Request $request){
+        // This will give you all the data sent in the POST request
+        // Now you can access individual data elements like $data['status'], $data['amount'], etc.
 
-        // session()->flash("message", "success");
-    }
+        // if successfull $request->input('status') will return success
 
+        // if failed $request->input('status') will return failed
 
-    public function failure($transactionref)
-    {
-        /**
-         * 
-         * Since Vpay doesn't send any webhook data when transfer fails, if you created a pending transaction when 
-         * redirecting to the gateway in the redirectToGateway(), make sure to cancel the transaction
-        */
+        $status = $request->input('status');
+        $amount = $request->input('amount');
+        $transactionref = $request->input('transactionref');
+        $email = $request->input('email');
 
-        //Transaction::where("transactionref",$transactionref)->delete();
+        // Use the retrieved data as needed
     }
 
 
@@ -272,8 +247,9 @@ class PaymentController extends Controller
 ```
 
 
+### If you opt to use the webhook, if not you can skip this step
 
-Set up your Job to handle the Payment Webhook, The Job was already Published after you ran the `php artisan make:vpay` command:
+Set up your Job to handle the Payment Webhook, The Job was already Published after you ran the `php artisan vpay:publish` command:
 
 In app/Jobs you would see a file VpayJob, edit it to handle the webhook data after every successful transaction. Visit [Vpay Docs](https://docs.vpay.africa/vpay-js-inline-dropin-integration-guide/6.-webhook-payload-authentication) to view the payload data
 
@@ -317,11 +293,11 @@ class VpayJob implements ShouldQueue
 
             $transactionref = $this->payload['transactionref'];
             $amount = $this->payload['amount'];
-            /**
-             * 
-             * Get the transaction with same transactionref and update status to be successfull
-             * Increment the user balance by the amount
-            */
+            
+             
+             // Get the transaction with same transactionref and update status to be successfull
+            // Increment the user balance by the amount
+            
         }
     }
 }
@@ -335,6 +311,7 @@ Sample Html/Bootstrap Form
 
 ```html
 <form method="POST" action="{{ route('vpay.redirect') }}" role="form" class="mt-5 col-md-8 mx-auto">
+    @csrf
     <h3>Payment Form</h3>
     <div class="row mb-5">
         <div class="col-md-8">
@@ -342,7 +319,6 @@ Sample Html/Bootstrap Form
             <input type="text" class="form-control mt-3" name="amount" placeholder="Amount"> {{-- required --}}
             <input type="hidden" name="currency" value="NGN">
             <input type="hidden" name="transactionref" value="{{ Str::random(25) }}">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}"> {{-- employ this in place of csrf_field only in laravel 5.0 --}}
 
             <button class="btn btn-primary mt-3">Submit</button>
         </div>
@@ -350,15 +326,17 @@ Sample Html/Bootstrap Form
 </form>
 ```
 
-When clicking the submit button the customer gets redirected to the checkout page that was published in your views directory.
+After clicking the submit button the customer gets redirected a checkout page.
 
-So now we've redirected the customer. The customer did some actions there (hopefully he or she paid the order) and now gets redirected back either the success or failure route.
+After the customer does some actions there and now gets redirected back to either the success or failure route with callback data.
 
-Vpay would send some data to the webhook which set up earlier. This webhook would contain some some data as payload. This webhook data payload will be sent along with a JWT token containing {secret: your_secret_key} as its payload. 
+#### For webhook
+
+Vpay would send some data to the webhook (remember to exclude the webhook url from CSRF verification). This webhook will contain some information as its payload. Additionally, a JWT token will accompany this payload, with {secret: your_secret_key} as its content. 
 
 We must validate if the redirect to our site is a valid request (we don't want imposters to wrongfully place non-paid order).
 
-The webhook url `payment/webhook/vpay` is secured using a middleware which decodes the JWT token and compare its secret payload with the secret-key added in the env file, on success it dispatches a job to queue, check the Job in your App/Job and handle the details
+The webhook url `payment/webhook/vpay` is secured using a middleware (you don't have to set up any middleware as it has been set already in this package). This decodes the JWT token and compare its secret payload with the secret-key added in the env file, on success it dispatches a job to queue, check the Job in your App/Job and handle the details
 
 
 ## Contributing

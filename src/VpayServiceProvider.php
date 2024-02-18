@@ -13,18 +13,12 @@ class VpayServiceProvider extends ServiceProvider
 {
     public function boot():void
     {
-        $this->loadViewsFrom(__DIR__.'/../src/resources/views', 'Vpay');
- 
-        $this->publishes([
-            __DIR__.'/../src/resources/views' => resource_path('views/checkoutpage.blade.php'),
-
-        ]);
 
 
-        $this->loadRoutesFrom(__DIR__."/../src/routes/web.php");
+        $this->loadRoutesFrom(__DIR__."../../routes/web.php");
         $this->publishes([
 
-            __DIR__.'/../src/resources/config/vpay.php' => config_path('vpay.php')
+            __DIR__.'../../config/vpay.php' => config_path('vpay.php')
         ]);
 
 
@@ -34,16 +28,16 @@ class VpayServiceProvider extends ServiceProvider
     }
 
     public function register(){
-        $this->mergeConfigFrom(__DIR__."/../src/resources/config/vpay.php","vpay");
+        $this->mergeConfigFrom(__DIR__."../../config/vpay.php","vpay");
 
         app('router')->aliasMiddleware('VerifyWebhook',VerifyWebhook::class);
 
-        $this->app->singleton("make:vpay", function ($app) {
+        $this->app->singleton("vpay:publish", function ($app) {
             return new Publish();
         });
 
         $this->commands([
-            "make:vpay",
+            "vpay:publish",
         ]);
 
     }

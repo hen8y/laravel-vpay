@@ -8,16 +8,26 @@ use Illuminate\Routing\Controller;
 
 
 class VpayController extends Controller
-{
+{    
+    /**
+     * handleWebhook
+     *
+     * @param  Request $request
+     * @return void
+     */
     public function handleWebhook(Request $request){
 
         $payload = $request->all();
-        VpayJob::dispatch($payload);
 
+        $vpayJobFilePath = app_path('Jobs/VpayJob.php');
 
-        return response()->json([
-            "message"=>"Webhook received successfully and processed",
-        ]);
+        if (file_exists($vpayJobFilePath)) {
+            VpayJob::dispatch($payload);
+    
+            return response()->json([
+                "message" => "Webhook received successfully and processed",
+            ]);
+        } 
 
     }
 }

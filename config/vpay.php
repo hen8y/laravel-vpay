@@ -13,7 +13,7 @@ return [
     | Options("live", "sandbox")
     |
     */
-    "status"=> "live",
+    "status"=>env("VPAY_PUBLICID","sandbox"),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ return [
     | e.g. Tel: +2348030070000, Email: support@yourorg.com
     |
     */
-    "customer_service_channel"=> "email@yourapp.com",
+    "customer_service_channel"=> env("MERCHANT_EMAIL",""),
 
     /*
     |--------------------------------------------------------------------------
