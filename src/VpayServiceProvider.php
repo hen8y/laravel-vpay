@@ -15,7 +15,7 @@ class VpayServiceProvider extends ServiceProvider
     {
 
 
-        $this->loadRoutesFrom(__DIR__."../../routes/web.php");
+        $this->loadRoutesFrom(__DIR__."/routes/web.php");
         $this->publishes([
 
             __DIR__.'../../config/vpay.php' => config_path('vpay.php')
