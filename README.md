@@ -20,15 +20,7 @@ Or add the following line to the require block of your `composer.json` file.
 You'll then need to run `composer install` or `composer update` to download it and have the autoloader updated.
 
 
-
 Once Laravel Vpay is installed, you need to register the service provider. Open up config/app.php and add the following to the providers key.
-
-```php
-    php artisan vendor:publish --tag=vpay-config
-
-```
-
-You can publish the configuration file and assets by running:
 
 ```php
 'providers' => [
@@ -36,6 +28,14 @@ You can publish the configuration file and assets by running:
     Hen8y\Vpay\VpayServiceProvider::class,
     ...
 ]
+
+```
+
+
+You can publish the configuration file and assets by running:
+
+```php
+    php artisan vendor:publish --tag=vpay-config
 
 ```
 
