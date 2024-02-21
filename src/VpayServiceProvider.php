@@ -14,12 +14,12 @@ class VpayServiceProvider extends ServiceProvider
     public function boot():void
     {
 
-
+        $config = realpath(__DIR__."/../config/vpay.php");
         $this->loadRoutesFrom(__DIR__."/routes/web.php");
         $this->publishes([
 
-            __DIR__.'../../config/vpay.php' => config_path('vpay.php')
-        ]);
+            $config => config_path('vpay.php')
+        ],"vpay-config");
 
 
 
@@ -28,7 +28,9 @@ class VpayServiceProvider extends ServiceProvider
     }
 
     public function register(){
-        $this->mergeConfigFrom(__DIR__."../../config/vpay.php","vpay");
+        $config = realpath(__DIR__."/../config/vpay.php");
+        
+        $this->mergeConfigFrom($config,"vpay");
 
         app('router')->aliasMiddleware('VerifyWebhook',VerifyWebhook::class);
 
