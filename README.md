@@ -24,6 +24,13 @@ You'll then need to run `composer install` or `composer update` to download it a
 Once Laravel Vpay is installed, you need to register the service provider. Open up config/app.php and add the following to the providers key.
 
 ```php
+    php artisan vendor:publish --tag=vpay-config
+
+```
+
+You can publish the configuration file and assets by running:
+
+```php
 'providers' => [
     ...
     Hen8y\Vpay\VpayServiceProvider::class,
@@ -34,7 +41,7 @@ Once Laravel Vpay is installed, you need to register the service provider. Open 
 
 ## Important
 
- The url below is for your vpay webhook. Callbacks are not as efficient as webhooks, so we've crafted this package to use webhooks mainly but you can opt for the callback option
+ The url below is for your vpay webhook, don't include it as part of your routes. Callbacks are not as efficient as webhooks, so we've crafted this package to use webhooks mainly but you can opt for the callback option
 
  ```
     /payment/webhook/vpay
@@ -204,18 +211,15 @@ class PaymentController extends Controller
 
     /**
      * Redirect the User to Checkout Page
-     * @return void
      */
     public function redirectToGateway()
     {
 
         // Sends the transaction data to the checkout handler
-        
         $data = array(
-        'amount'=> request("amount"),
-        "email"=>request("email"),
-        "currency"=>"NGN",
-        "transactionref"=> request("transactionref"),
+            'amount'=> request("amount"),
+            "email"=>request("email"),
+            "transactionref"=> \Str::random(25),
         );
         return (new Vpay)->handleCheckout($data);
     }
@@ -310,15 +314,13 @@ Sample Html/Bootstrap Form
 
 
 ```html
-<form method="POST" action="{{ route('vpay.redirect') }}" role="form" class="mt-5 col-md-8 mx-auto">
+<form method="POST" action="/payment/redirect/" role="form" class="mt-5 col-md-8 mx-auto">
     @csrf
     <h3>Payment Form</h3>
     <div class="row mb-5">
         <div class="col-md-8">
             <input type="email" class="form-control mt-3" name="email" placeholder="Email Address"> {{-- required --}}
             <input type="text" class="form-control mt-3" name="amount" placeholder="Amount"> {{-- required --}}
-            <input type="hidden" name="currency" value="NGN">
-            <input type="hidden" name="transactionref" value="{{ Str::random(25) }}">
 
             <button class="btn btn-primary mt-3">Submit</button>
         </div>
@@ -338,6 +340,11 @@ We must validate if the redirect to our site is a valid request (we don't want i
 
 The webhook url `payment/webhook/vpay` is secured using a middleware (you don't have to set up any middleware as it has been set already in this package). This decodes the JWT token and compare its secret payload with the secret-key added in the env file, on success it dispatches a job to queue, check the Job in your App/Job and handle the details
 
+Make sure to run 👇 for the job on queue
+```php
+
+    php artisan queue:work
+```
 
 ## Contributing
 

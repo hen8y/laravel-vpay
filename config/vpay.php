@@ -13,7 +13,7 @@ return [
     | Options("live", "sandbox")
     |
     */
-    "status"=>env("VPAY_PUBLICID","sandbox"),
+    "status"=>env("VPAY_STATUS","sandbox"),
 
     /*
     |--------------------------------------------------------------------------

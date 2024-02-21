@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Log;
 
-class VpayJob implements ShouldQueue
+class VpayJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
