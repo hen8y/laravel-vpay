@@ -14,7 +14,7 @@ composer require hen8y/laravel-vpay
 Or add the following line to the require block of your `composer.json` file.
 
 ```
-"hen8y/laravel-vpay": "1.*"
+"hen8y/laravel-vpay": "2."
 ```
 
 You'll then need to run `composer install` or `composer update` to download it and have the autoloader updated.
