@@ -3,7 +3,7 @@
 namespace Hen8y\Vpay;
 
 use Illuminate\Support\ServiceProvider;
-use  Hen8y\Vpay\App\Http\Middleware\VerifyWebhook;
+use Hen8y\Vpay\App\Http\Middleware\VerifyWebhook;
 use Hen8y\Vpay\App\Commands\Publish;
 
 
@@ -11,15 +11,15 @@ use Hen8y\Vpay\App\Commands\Publish;
 
 class VpayServiceProvider extends ServiceProvider
 {
-    public function boot():void
+    public function boot(): void
     {
 
-        $config = realpath(__DIR__."/../config/vpay.php");
-        $this->loadRoutesFrom(__DIR__."/routes/web.php");
+        $config = realpath(__DIR__ . "/../config/vpay.php");
+        $this->loadRoutesFrom(__DIR__ . "/routes/web.php");
         $this->publishes([
 
             $config => config_path('vpay.php')
-        ],"vpay-config");
+        ], "vpay-config");
 
 
 
@@ -27,12 +27,13 @@ class VpayServiceProvider extends ServiceProvider
 
     }
 
-    public function register(){
-        $config = realpath(__DIR__."/../config/vpay.php");
-        
-        $this->mergeConfigFrom($config,"vpay");
+    public function register()
+    {
+        $config = realpath(__DIR__ . "/../config/vpay.php");
 
-        app('router')->aliasMiddleware('VerifyWebhook',VerifyWebhook::class);
+        $this->mergeConfigFrom($config, "vpay");
+
+        app('router')->aliasMiddleware('VerifyWebhook', VerifyWebhook::class);
 
         $this->app->singleton("vpay:publish", function ($app) {
             return new Publish();

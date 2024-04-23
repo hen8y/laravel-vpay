@@ -1,6 +1,5 @@
 # laravel-vpay
 
-
 ## Installation
 
 [PHP](https://php.net) 7.2, [LARAVEL](https://laravel.com), and [Composer](https://getcomposer.org) are required.
@@ -13,12 +12,11 @@ composer require hen8y/laravel-vpay
 
 Or add the following line to the require block of your `composer.json` file.
 
-```
+```php
 "hen8y/laravel-vpay": "1.*"
 ```
 
 You'll then need to run `composer install` or `composer update` to download it and have the autoloader updated.
-
 
 Once Laravel Vpay is installed, you need to register the service provider. Open up config/app.php and add the following to the providers key.
 
@@ -31,7 +29,6 @@ Once Laravel Vpay is installed, you need to register the service provider. Open 
 
 ```
 
-
 You can publish the configuration file and assets by running:
 
 ```php
@@ -43,7 +40,7 @@ You can publish the configuration file and assets by running:
 
  The url below is for your vpay webhook, don't include it as part of your routes. Callbacks are not as efficient as webhooks, so we've crafted this package to use webhooks mainly but you can opt for the callback option
 
- ```
+ ```php
     /payment/webhook/vpay
  ```
 
@@ -57,10 +54,11 @@ If you want to use the webhook make sure to publish the job file:
 php artisan vpay:publish
 ```
 
-#### A file would be created
+### A file would be created
+
 - Job-file named `VpayJob.php` in the `Jobs` directory
 
-#### Details of the Config file
+### Details of the Config file
 
 The configuration-file named `vpay.php` with some defaults that was placed in your `config` directory:
 
@@ -144,8 +142,6 @@ return [
 ];
 ```
 
-
-
 ## Usage
 
 Exclude the webhook url from CSRF verification
@@ -161,9 +157,6 @@ Open your `VerifyCsrfToken Middleware` file located in `app/Http/Middleware` and
 
 ```
 
-
-
-
 Open your .env file and add your public key, secret key, merchant email and payment url like so:
 
 ```php
@@ -173,27 +166,22 @@ VPAY_STATUS=sandbox
 MERCHANT_EMAIL=hen8y@outlook.com
 ```
 
-
 Set up your redirect & callback route :
 
 - Redirect to the checkout
 
-
 ```php
-Route::post('/payment/redirect', '\App\Http\Controllers\PaymentController@redirectToGateway');
+Route::post('/payment/redirect', [\App\Http\Controllers\PaymentController::class,'redirectToGateway']);
 ```
-
 
 - Callback
 
 ```php
-Route::post('/payment/callback/', '\App\Http\Controllers\PaymentController@callback');
+Route::post('/payment/redirect', [\App\Http\Controllers\PaymentController::class,'callback']);
+
 ```
 
-
-
 Set up your payment controller to send the payment details
-
 
 ```php
 <?php
@@ -250,13 +238,11 @@ class PaymentController extends Controller
 }
 ```
 
-
 ### If you opt to use the webhook, if not you can skip this step
 
 Set up your Job to handle the Payment Webhook, The Job was already Published after you ran the `php artisan vpay:publish` command:
 
 In app/Jobs you would see a file VpayJob, edit it to handle the webhook data after every successful transaction. Visit [Vpay Docs](https://docs.vpay.africa/vpay-js-inline-dropin-integration-guide/6.-webhook-payload-authentication) to view the payload data
-
 
 ```php
 
@@ -309,9 +295,7 @@ class VpayJob implements ShouldQueue
 
 ```
 
-
 Sample Html/Bootstrap Form
-
 
 ```html
 <form method="POST" action="/payment/redirect/" role="form" class="mt-5 col-md-8 mx-auto">
@@ -334,13 +318,14 @@ After the customer does some actions there and now gets redirected back to eithe
 
 #### For webhook
 
-Vpay would send some data to the webhook (remember to exclude the webhook url from CSRF verification). This webhook will contain some information as its payload. Additionally, a JWT token will accompany this payload, with {secret: your_secret_key} as its content. 
+Vpay would send some data to the webhook (remember to exclude the webhook url from CSRF verification). This webhook will contain some information as its payload. Additionally, a JWT token will accompany this payload, with {secret: your_secret_key} as its content.
 
 We must validate if the redirect to our site is a valid request (we don't want imposters to wrongfully place non-paid order).
 
 The webhook url `payment/webhook/vpay` is secured using a middleware (you don't have to set up any middleware as it has been set already in this package). This decodes the JWT token and compare its secret payload with the secret-key added in the env file, on success it dispatches a job to queue, check the Job in your App/Job and handle the details
 
 Make sure to run 👇 for the job on queue
+
 ```php
 
     php artisan queue:work
@@ -349,7 +334,6 @@ Make sure to run 👇 for the job on queue
 ## Contributing
 
 Please feel free to fork this package and contribute by submitting a pull request to enhance the functionalities.
-
 
 Don't forget to [follow me on twitter](https://twitter.com/hen8y)!
 
