@@ -177,7 +177,7 @@ Route::post('/payment/redirect', [\App\Http\Controllers\PaymentController::class
 - Callback
 
 ```php
-Route::post('/payment/redirect', [\App\Http\Controllers\PaymentController::class,'callback']);
+Route::post('/payment/callback', [\App\Http\Controllers\PaymentController::class,'callback']);
 
 ```
 
