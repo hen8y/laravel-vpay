@@ -12,7 +12,7 @@ composer require hen8y/laravel-vpay
 
 Or add the following line to the require block of your `composer.json` file.
 
-```
+```bash
 "hen8y/laravel-vpay": "1.*"
 ```
 
