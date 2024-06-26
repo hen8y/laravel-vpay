@@ -1,5 +1,7 @@
 # laravel-vpay
 
+![downloads](https://img.shields.io/packagist/dt/hen8y/laravel-flash.svg)
+
 ## Installation
 
 [PHP](https://php.net) 7.2, [LARAVEL](https://laravel.com), and [Composer](https://getcomposer.org) are required.
