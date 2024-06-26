@@ -1,6 +1,6 @@
 # laravel-vpay
 
-![downloads](https://img.shields.io/packagist/dt/hen8y/laravel-flash.svg)
+![downloads](https://img.shields.io/packagist/dt/hen8y/laravel-vpay.svg)
 
 ## Installation
 
