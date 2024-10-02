@@ -159,6 +159,21 @@ Open your `VerifyCsrfToken Middleware` file located in `app/Http/Middleware` and
 
 ```
 
+### For laravel 11
+
+Open `bootstrap/app.php` and add this
+
+```php
+
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->validateCsrfTokens(except: [
+            //
+            
+            "/payment/webhook/vpay"
+        ]);
+    })
+```
+
 Open your .env file and add your public key, secret key, merchant email and payment url like so:
 
 ```php
