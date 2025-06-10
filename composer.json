@@ -1,8 +1,7 @@
 {
     "name": "hen8y/laravel-vpay",
     "description": "laravel 8, 9, 10, 11 package for Vpay",
-    "keywords":
-    [
+    "keywords": [
         "vpay",
         "payment",
         "gateway",
@@ -39,8 +38,8 @@
         }
     ],
     "extra": {
-        "laravel":{
-            "providers":[
+        "laravel": {
+            "providers": [
                 "Hen8y\\Vpay\\VpayServiceProvider"
             ]
         }

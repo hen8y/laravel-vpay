@@ -40,11 +40,11 @@ You can publish the configuration file and assets by running:
 
 ## Important
 
- The url below is for your vpay webhook, don't include it as part of your routes. Callbacks are not as efficient as webhooks, so we've crafted this package to use webhooks mainly but you can opt for the callback option
+The url below is for your vpay webhook, don't include it as part of your routes. Callbacks are not as efficient as webhooks, so we've crafted this package to use webhooks mainly but you can opt for the callback option
 
- ```php
-    /payment/webhook/vpay
- ```
+```php
+   /payment/webhook/vpay
+```
 
 Visit Vpay dashboard and add `https://yoursite.com/payment/webhook/pay` as your webhook url in the settings
 
@@ -58,7 +58,7 @@ php artisan vpay:publish
 
 ### A file would be created
 
-- Job-file named `VpayJob.php` in the `Jobs` directory
+-   Job-file named `VpayJob.php` in the `Jobs` directory
 
 ### Details of the Config file
 
@@ -73,7 +73,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Status of Your Applicatiom 
+    | Status of Your Applicatiom
     |--------------------------------------------------------------------------
     |
     | Here you may specify what is the status pf your app
@@ -85,17 +85,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Public Key 
+    | Public Key
     |--------------------------------------------------------------------------
     |
-    | Enter the public key gotten from vpay website 
+    | Enter the public key gotten from vpay website
     |
     */
     "public_id"=> env("VPAY_PUBLICID"),
 
     /*
     |--------------------------------------------------------------------------
-    | Public Key 
+    | Public Key
     |--------------------------------------------------------------------------
     |
     | Enter the secret key gotten from vpay website
@@ -105,10 +105,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Customer Care Email Address 
+    | Customer Care Email Address
     |--------------------------------------------------------------------------
     |
-    | Here specify the customer service & support channels of your business 
+    | Here specify the customer service & support channels of your business
     | e.g. Tel: +2348030070000, Email: support@yourorg.com
     |
     */
@@ -116,7 +116,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Customer Care Support Logo 
+    | Customer Care Support Logo
     |--------------------------------------------------------------------------
     |
     | Here specify a link to your customer support logo
@@ -127,7 +127,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Transaction Type 
+    | Transaction Type
     |--------------------------------------------------------------------------
     |
     | Here specify your transaction type,
@@ -139,8 +139,6 @@ return [
     "txn_charge_type"=> "flat",
 
     "txn_charge"=>1.3,
-
-
 ];
 ```
 
@@ -159,7 +157,7 @@ Open your `VerifyCsrfToken Middleware` file located in `app/Http/Middleware` and
 
 ```
 
-### For laravel 11
+### For laravel 11+
 
 Open `bootstrap/app.php` and add this
 
@@ -167,8 +165,7 @@ Open `bootstrap/app.php` and add this
 
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
-            //
-            
+            //...
             "/payment/webhook/vpay"
         ]);
     })
@@ -185,13 +182,13 @@ MERCHANT_EMAIL=hen8y@outlook.com
 
 Set up your redirect & callback route :
 
-- Redirect to the checkout
+-   Redirect to the checkout
 
 ```php
-Route::post('/payment/redirect', [\App\Http\Controllers\PaymentController::class,'redirectToGateway']);
+Route::post('/payment/redirect', [\App\Http\Controllers\PaymentController::class,'redirect']);
 ```
 
-- Callback
+-   Callback
 
 ```php
 Route::post('/payment/callback', [\App\Http\Controllers\PaymentController::class,'callback']);
@@ -208,16 +205,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Hen8y\Vpay\Vpay;
 
-
-
-
 class PaymentController extends Controller
 {
-
     /**
      * Redirect the User to Checkout Page
      */
-    public function redirectToGateway()
+    public function redirect()
     {
 
         // Sends the transaction data to the checkout handler
@@ -228,7 +221,6 @@ class PaymentController extends Controller
         );
         return (new Vpay)->handleCheckout($data);
     }
-
 
     /**
      * Callback
@@ -250,8 +242,6 @@ class PaymentController extends Controller
 
         // Use the retrieved data as needed
     }
-
-
 }
 ```
 
@@ -300,11 +290,10 @@ class VpayJob implements ShouldQueue
 
             $transactionref = $this->payload['transactionref'];
             $amount = $this->payload['amount'];
-            
-             
+
              // Get the transaction with same transactionref and update status to be successfull
             // Increment the user balance by the amount
-            
+
         }
     }
 }
@@ -315,14 +304,28 @@ class VpayJob implements ShouldQueue
 Sample Html/Bootstrap Form
 
 ```html
-<form method="POST" action="/payment/redirect/" role="form" class="mt-5 col-md-8 mx-auto">
+<form
+    method="POST"
+    action="/payment/redirect/"
+    role="form"
+    class="mt-5 col-md-8 mx-auto"
+>
     @csrf
     <h3>Payment Form</h3>
     <div class="row mb-5">
         <div class="col-md-8">
-            <input type="email" class="form-control mt-3" name="email" placeholder="Email Address"> {{-- required --}}
-            <input type="text" class="form-control mt-3" name="amount" placeholder="Amount"> {{-- required --}}
-
+            <input
+                type="email"
+                class="form-control mt-3"
+                name="email"
+                placeholder="Email Address"
+            />
+            <input
+                type="text"
+                class="form-control mt-3"
+                name="amount"
+                placeholder="Amount"
+            />
             <button class="btn btn-primary mt-3">Submit</button>
         </div>
     </div>
@@ -352,7 +355,7 @@ Make sure to run 👇 for the job on queue
 
 Please feel free to fork this package and contribute by submitting a pull request to enhance the functionalities.
 
-Don't forget to [follow me on twitter](https://twitter.com/hen8y)!
+Don't forget to [follow me on twitter](https://x.com/hen8y)!
 
 Thanks!
 Ogbonna Henry (hen8y).

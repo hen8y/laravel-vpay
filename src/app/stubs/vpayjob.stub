@@ -13,8 +13,6 @@ class VpayJob
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
-
     /**
      * Create a new job instance.
      */
@@ -22,8 +20,6 @@ class VpayJob
     {
         $this->payload = $payload;
     }
-
-
 
     /**
      * Execute the job.
